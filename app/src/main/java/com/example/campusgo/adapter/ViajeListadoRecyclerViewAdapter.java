@@ -24,6 +24,16 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
     private Context context;
     private List<ViajeListadoData> list;
 
+    public interface OnViajeDataChangedListener {
+        void onViajeDataChanged();
+    }
+
+    private OnViajeDataChangedListener mDataChangedListener;
+
+    public void setOnViajeDataChangedListener(OnViajeDataChangedListener listener) {
+        this.mDataChangedListener = listener;
+    }
+
     public ViajeListadoRecyclerViewAdapter(Context context, List<ViajeListadoData> list) {
         this.context = context;
         this.list = list;
@@ -54,6 +64,7 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
         //Define la cantidad de registros a mostrar en el recyclerview
         return list.size();
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //Enlazar y declarar los controles del cardview
@@ -90,7 +101,29 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
             txtVehiculo.setText(v.getVehiculo().getMarca() + " " + v.getVehiculo().getModelo() + " • " + v.getVehiculo().getPlaca());
             txtRestricciones.setText(v.getRestricciones());
 
+            // --- INICIO DE LA LÓGICA QUE FALTABA ---
+            // Comprobamos el estado CADA VEZ que la vista se dibuja
 
+            boolean yaAgregado = false;
+            // Busca si este viaje (v) existe en la lista estática de reservas
+            for (ViajeListadoData viajeReservado : ViajeListadoData.viajes) {
+                if (viajeReservado.getViaje_id() == v.getViaje_id()) {
+                    yaAgregado = true;
+                    break;
+                }
+            }
+
+            // Ahora, dibuja el botón según el estado
+            if (yaAgregado) {
+                btnAgregar.setText("Agregado");
+                btnAgregar.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.green)));
+                btnAgregar.setIconResource(R.drawable.ic_check);
+            } else {
+                btnAgregar.setText("Agregar");
+                btnAgregar.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.blue_campusgo_1)));
+                btnAgregar.setIconResource(R.drawable.calendar_add_on_24px);
+            }
+            // --- FIN DE LA LÓGICA QUE FALTABA ---
         }
 
         @Override
@@ -110,6 +143,11 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
 
                     //Mostrar Lista
                     mostrarLista();
+                    // 2. --- AVISA AL FRAGMENT QUE LOS DATOS CAMBIARON ---
+                    if (mDataChangedListener != null) {
+                        mDataChangedListener.onViajeDataChanged();
+                    }
+                    // --------------------------------------------------
 
                 } else { //Si el texto del botón es "Agredado", al hacerle clic debe mostrar un mensaje para quitar el viaje
                     Helper.mensajeConfirmacion(context, "Confirme", "¿Desea retirar el viaje de su lista?", "Sí", "No", () -> {
@@ -123,6 +161,11 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
                         btnAgregar.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.blue_campusgo_1)));
                         btnAgregar.setIconResource(R.drawable.calendar_add_on_24px);
                         Toast.makeText(context, "Viaje Retirado", Toast.LENGTH_SHORT).show();
+                        // 3. --- AVISA AL FRAGMENT QUE LOS DATOS CAMBIARON ---
+                        if (mDataChangedListener != null) {
+                            mDataChangedListener.onViajeDataChanged();
+                        }
+                        // --------------------------------------------------
 
                     });
 
@@ -135,7 +178,7 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
             }
         }
 
-        public void mostrarLista(){
+        public void mostrarLista() {
             //Verificar su los viajes se han agregado a la lista
             for (int i = 0; i < ViajeListadoData.viajes.size(); i++) {
                 Log.e("VIAJES LISTA",
@@ -144,6 +187,7 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
                                 "ID: " + ViajeListadoData.viajes.get(i).getViaje_id());
             }
         }
+
     }
 }
 

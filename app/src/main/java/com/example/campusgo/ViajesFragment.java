@@ -45,7 +45,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ViajesFragment extends Fragment implements ReservaListadoRecyclerViewAdapter.OnReservaCancelListener {
+public class ViajesFragment extends Fragment implements ReservaListadoRecyclerViewAdapter.OnReservaCancelListener,
+        ViajeListadoRecyclerViewAdapter.OnViajeDataChangedListener {
 
     FragmentViajesBinding binding;
     ApiService apiService;
@@ -80,6 +81,7 @@ public class ViajesFragment extends Fragment implements ReservaListadoRecyclerVi
 
         // --- Configuración Lista Principal (Viajes) ---
         viajeAdapter = new ViajeListadoRecyclerViewAdapter(getContext(), viajeList);
+        viajeAdapter.setOnViajeDataChangedListener(this);
         binding.recyclerViewViajes.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewViajes.setAdapter(viajeAdapter);
         setupFiltrosBusqueda();
@@ -89,6 +91,12 @@ public class ViajesFragment extends Fragment implements ReservaListadoRecyclerVi
 
         // --- Carga Inicial de Datos ---
         mostrarViajes();
+        cargarViajesReservados();
+    }
+
+    @Override
+    public void onViajeDataChanged() {
+        // Cuando el adapter de arriba cambia, refrescamos el de abajo (el BottomSheet)
         cargarViajesReservados();
     }
 
@@ -116,57 +124,58 @@ public class ViajesFragment extends Fragment implements ReservaListadoRecyclerVi
 
         binding.swipeRefreshLayoutViajes.setRefreshing(true);
 
-        Call<ViajeListadoResponse> call = apiService.listarReservas(usuarioId);
-        call.enqueue(new Callback<ViajeListadoResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<ViajeListadoResponse> call, @NonNull Response<ViajeListadoResponse> response) {
-                if (isAdded() && response.isSuccessful() && response.body() != null) {
-                    // CASO DE ÉXITO...
-                    reservaList.clear();
-                    reservaList.addAll(Arrays.asList(response.body().getData()));
-                    reservaAdapter.notifyDataSetChanged();
-                    txtTituloBottomSheet.setText(reservaList.isEmpty() ? "No tienes viajes reservados" : "Mis Viajes Reservados");
-                } else if (isAdded()) {
-                    // --- MANEJO DE ERROR DEFINITIVO ---
-                    String errorMensaje = "Ocurrió un error desconocido.";
-                    if (response.errorBody() != null) {
-                        try {
-                            // Leemos el cuerpo del error UNA SOLA VEZ.
-                            String errorBodyString = response.errorBody().string();
-                            try {
-                                // Intentamos interpretarlo como JSON.
-                                JSONObject jsonError = new JSONObject(errorBodyString);
-                                errorMensaje = jsonError.getString("message");
-                            } catch (JSONException e) {
-                                // Si falla, el error era texto plano. Lo usamos directamente.
-                                errorMensaje = errorBodyString;
-                            }
-                        } catch (IOException e) {
-                            errorMensaje = "Error al leer la respuesta del servidor.";
-                        }
-                    } else {
-                        errorMensaje = "Respuesta no exitosa. Código: " + response.code();
-                    }
-                    Helper.mensajeError(getContext(), "Error de Reservas", errorMensaje);
-                }
-                binding.swipeRefreshLayoutViajes.setRefreshing(false);
-            }
+        // --- INICIO: Cargar desde la lista estática local ---
+        // 1. Limpiamos la lista actual del adapter del BottomSheet
+        reservaList.clear();
 
-            @Override
-            public void onFailure(@NonNull Call<ViajeListadoResponse> call, @NonNull Throwable t) {
-                if (isAdded()) {
-                    Helper.mensajeError(getContext(), "Error de Red", "No se pudo conectar al servidor.");
-                    binding.swipeRefreshLayoutViajes.setRefreshing(false);
-                }
-            }
-        });
+        // 2. Añadimos todos los viajes que el usuario agregó manualmente
+        //    desde la otra lista (los que están en ViajeListadoData.viajes)
+        reservaList.addAll(com.example.campusgo.model.ViajeListadoData.viajes);
+
+        // 3. Notificamos al adaptador del BottomSheet
+        if (reservaAdapter != null) {
+            reservaAdapter.notifyDataSetChanged();
+        }
+
+        // 4. Actualizamos el título
+        if (isAdded()) {
+            txtTituloBottomSheet.setText(reservaList.isEmpty() ? "No tienes viajes reservados" : "Mis Viajes Reservados");
+        }
+
+        // 5. Detenemos el refresco (si estaba activo)
+        binding.swipeRefreshLayoutViajes.setRefreshing(false);
+        // --- FIN: Cargar desde la lista estática local ---
     }
+
 
     @Override
     public void onCancelReservaClick(int viajeId) {
-        Toast.makeText(getContext(), "Cancelando reserva para el viaje ID: " + viajeId, Toast.LENGTH_SHORT).show();
-        // Aquí iría la llamada a la API para cancelar la reserva.
-        // Al completarse, deberías llamar a cargarViajesReservados() para refrescar la lista.
+
+        boolean viajeEliminado = false;
+        java.util.Iterator<ViajeListadoData> iterator = com.example.campusgo.model.ViajeListadoData.viajes.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getViaje_id() == viajeId) {
+                iterator.remove();
+                viajeEliminado = true;
+                break;
+            }
+        }
+
+        if (viajeEliminado) {
+            // 1. Refresca el BottomSheet (para que el item desaparezca)
+            cargarViajesReservados();
+
+            // 2. Refresca la lista principal (para que el botón "Agregado" vuelva a "Agregar")
+            if (viajeAdapter != null) {
+                // Esto llamará a onBindViewHolder -> mostrarDatos -> y ejecutará la lógica que acabamos de agregar
+                viajeAdapter.notifyDataSetChanged();
+            }
+
+            Toast.makeText(getContext(), "Reserva quitada", Toast.LENGTH_SHORT).show();
+        }
+
+        // ¡ESTE ES EL TOAST QUE QUITÉ! Ya no es necesario.
+        // Toast.makeText(getContext(), "Cancelando reserva para el viaje ID: " + viajeId, Toast.LENGTH_SHORT).show();
     }
 
     private void setupFiltrosBusqueda() {
@@ -275,4 +284,5 @@ public class ViajesFragment extends Fragment implements ReservaListadoRecyclerVi
             }
         });
     }
+
 }
