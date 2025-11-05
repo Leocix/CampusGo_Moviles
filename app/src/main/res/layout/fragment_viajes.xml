@@ -5,10 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".ViajesFragment">
 
+    <!-- Contenido principal con SwipeRefresh -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayoutViajes"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_marginBottom="55dp">
 
         <LinearLayout
             android:id="@+id/containerBusquedaYLista"
@@ -42,7 +45,7 @@
                     android:maxLines="1" />
                 ...
             </com.google.android.material.textfield.TextInputLayout>
-
+            <!-- Fila 1 de chips -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,7 +90,7 @@
                     app:ensureMinTouchTargetSize="false" />
                 ...
             </LinearLayout>
-
+            <!-- Fila 2 de chips -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -120,27 +123,94 @@
                     app:ensureMinTouchTargetSize="false" />
                 ...
             </LinearLayout>
-            <!-- Lista -->
+            <!-- Lista de viajes -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewViajes"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 tools:listitem="@layout/cardview_viaje" />
             ...
         </LinearLayout>
         ...
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    ...
-
-    <include
-        android:id="@+id/bottom_sheet_reservas"
-        layout="@layout/fragment_bottomsheet_reservas"
+    <!-- BottomSheet -->
+    <LinearLayout
+        android:id="@+id/bottomSheetResumen"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="500dp"
+        android:background="@drawable/bg_bottomsheet_rounded"
+        android:orientation="vertical"
+        android:padding="16dp"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="80dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
+        app:behavior_peekHeight="55dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <View
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bottomsheet_handle" />
 
+        <TextView
+            android:id="@+id/txtTituloResumen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:text="Mis viajes"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+        <!-- Observación -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilObservacion"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Observación"
+            app:boxCornerRadiusBottomEnd="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusTopStart="10dp"
+            app:endIconMode="clear_text"
+            app:startIconDrawable="@drawable/ic_reservar">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtObservacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLines="1" />
+            ...
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConfirmarReserva"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/orange_red"
+                android:text="Confirmar reserva"
+                app:icon="@drawable/ic_check"
+                app:iconGravity="textStart" />
+            ...
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewViajesAgregado"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            tools:listitem="@layout/cardview_reserva" />
+        ...
+    </LinearLayout>
+    ...
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

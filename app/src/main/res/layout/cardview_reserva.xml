@@ -1,19 +1,23 @@
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cardReserva"
+    android:id="@+id/cardViaje"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="0dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginRight="0dp"
     android:layout_marginBottom="10dp"
+    android:backgroundTint="@color/blue_campuesgo_4"
     app:cardCornerRadius="10dp"
-    app:cardElevation="4dp">
+    app:cardUseCompatPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
-
+        android:padding="5dp">
         <!-- Encabezado: origen, destino, estado -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,120 +26,237 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:orientation="vertical">
                 <!-- Destino -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:tooltipText="Punto de partida (origen)">
+
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/distance_24px"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/ic_location"
+                        android:tooltipText="Destino"
                         app:tint="@color/red" />
+
                     <TextView
                         android:id="@+id/txtDestino"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textSize="16sp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textSize="12sp"
                         android:textStyle="bold"
+                        android:tooltipText="Destino"
                         tools:text="USAT" />
+                    ...
                 </LinearLayout>
-                <!-- Línea -->
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="15dp"
-                    android:src="@drawable/arrow_warm_up_24px" />
+                <!-- Línea origen -> destino -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:tooltipText="Punto de partida (origen)">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="10dp"
+                        android:src="@drawable/arrow_warm_up_24px"
+                        android:tooltipText="Destino" />
+                    ...
+                </LinearLayout>
                 <!-- Origen -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
+
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:src="@drawable/trip_origin_24px"
                         app:tint="@color/green" />
+
                     <TextView
                         android:id="@+id/txtPuntoPartida"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textSize="14sp"
-                        tools:text="Parque Principal" />
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textSize="12sp"
+                        android:textStyle="normal"
+                        tools:text="Parque central de Chiclayo" />
+                    ...
                 </LinearLayout>
+                ...
             </LinearLayout>
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipEstado"
-                style="@style/Widget.Material3.Chip.Assist.Elevated"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="RESERVADO" />
+                android:layout_marginLeft="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/layoutUsuariosReservado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/cimUsuariosReservado1"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@mipmap/ic_launcher"
+                        app:civ_border_color="@color/blue_campusgo_2"
+                        app:civ_border_width="1dp" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/cimUsuariosReservado2"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="2dp"
+                        android:src="@mipmap/ic_launcher"
+                        app:civ_border_color="@color/blue_campusgo_2"
+                        app:civ_border_width="1dp" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/cimUsuariosReservado3"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="2dp"
+                        android:src="@mipmap/ic_launcher"
+                        app:civ_border_color="@color/blue_campusgo_2"
+                        app:civ_border_width="1dp" />
+                    ...
+                </LinearLayout>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipEstado"
+                    style="@style/Widget.Material3.Chip.Assist.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
+                    android:textSize="8sp"
+                    android:visibility="visible"
+                    app:chipIcon="@drawable/ic_flag"
+                    app:chipIconVisible="true"
+                    app:ensureMinTouchTargetSize="false"
+                    tools:text="REGISTRADO" />
+                ...
+            </LinearLayout>
+            ...
         </LinearLayout>
-
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:background="?android:attr/listDivider" />
-
-        <!-- Detalles -->
+        <!-- Fecha y hora -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
+
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_date" />
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_reservar" />
+
             <TextView
                 android:id="@+id/txtFechaHoraSalida"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                tools:text="23-10-2025 13:15" />
+                android:textSize="12sp"
+                tools:text="23-10-2025 13:15:00" />
+            ...
         </LinearLayout>
-
+        <!-- Asientos -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="0dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
+
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_sit" />
+
+            <TextView
+                android:id="@+id/txtAsientos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textSize="12sp"
+                tools:text="4 / 4 asientos disponibles" />
+            ...
+        </LinearLayout>
+        <!-- Vehículo -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:src="@drawable/ic_taxi" />
+
             <TextView
                 android:id="@+id/txtVehiculo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                tools:text="Toyota Corolla • CCB-850" />
+                android:textSize="12sp"
+                tools:text="Toyota Corolla • CCB-850 • Rojo" />
+            ...
         </LinearLayout>
-
-        <!-- Botón de Cancelar -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCancelarReserva"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+        <!-- Restricciones -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Cancelar Reserva"
-            android:textColor="@color/red"
-            app:icon="@android:drawable/ic_menu_close_clear_cancel"
-            app:iconTint="@color/red"
-            app:strokeColor="@color/red" />
+            android:layout_marginTop="0dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_restriccion" />
+
+            <TextView
+                android:id="@+id/txtRestricciones"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                tools:text="No se admiten mascotas." />
+            ...
+        </LinearLayout>
+        ...
     </LinearLayout>
+    ...
 </com.google.android.material.card.MaterialCardView>

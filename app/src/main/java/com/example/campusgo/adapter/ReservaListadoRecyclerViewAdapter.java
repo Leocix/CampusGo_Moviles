@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,7 +71,7 @@ public class ReservaListadoRecyclerViewAdapter extends RecyclerView.Adapter<Rese
             txtFechaHoraSalida = itemView.findViewById(R.id.txtFechaHoraSalida);
             txtVehiculo = itemView.findViewById(R.id.txtVehiculo);
             chipEstado = itemView.findViewById(R.id.chipEstado);
-            btnCancelarReserva = itemView.findViewById(R.id.btnCancelarReserva);
+//            btnCancelarReserva = itemView.findViewById(R.id.btnCancelarReserva);
 
             // Configuramos el clic para el botón de cancelar
             btnCancelarReserva.setOnClickListener(v -> {

@@ -2,8 +2,10 @@ package com.example.campusgo.retrofit;
 
 import com.example.campusgo.model.UsuarioData;
 import com.example.campusgo.request.LoginRequest;
+import com.example.campusgo.request.ReservaRequest;
 import com.example.campusgo.request.ViajeListadoRequest;
 import com.example.campusgo.response.LoginResponse;
+import com.example.campusgo.response.ReservaResponse;
 import com.example.campusgo.response.UsuarioResponse;
 import com.example.campusgo.response.ViajeListadoResponse;
 
@@ -43,6 +45,9 @@ public interface ApiService {
 
     @POST("/viaje/listar")
     Call<ViajeListadoResponse> listarViajes(@Body ViajeListadoRequest request);
+
+    @POST("/viaje/registrar")
+    Call<ReservaResponse> registrarReserva(@Body ReservaRequest request);
 
 
 

@@ -41,7 +41,7 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/distance_24px"
+                        android:src="@drawable/ic_location"
                         android:tooltipText="Destino"
                         app:tint="@color/red" />
 
@@ -166,7 +166,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -180,6 +180,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:textSize="13sp"
                 tools:text="23-10-2025 13:15:00" />
             ...
         </LinearLayout>
@@ -187,7 +188,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="0dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -201,6 +202,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:textSize="13sp"
                 tools:text="4 / 4 asientos disponibles" />
             ...
         </LinearLayout>
@@ -208,7 +210,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="0dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -222,6 +224,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:textSize="13sp"
                 tools:text="Toyota Corolla • CCB-850 • Rojo" />
             ...
         </LinearLayout>
@@ -229,7 +232,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="0dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -246,6 +249,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="2"
+                android:textSize="13sp"
                 android:textStyle="italic"
                 tools:text="No se admiten mascotas." />
             ...
@@ -254,7 +258,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
@@ -263,6 +267,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Agregar"
+                android:textSize="13sp"
                 app:icon="@drawable/calendar_add_on_24px"
                 app:iconGravity="textStart" />
 
@@ -275,6 +280,7 @@
                 android:layout_weight="1"
                 android:text="Ver ruta"
                 android:textColor="#000"
+                android:textSize="13sp"
                 app:icon="@drawable/map_search_24px"
                 app:iconGravity="textStart"
                 app:iconTint="#ff0000"
