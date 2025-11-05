@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_viajes"
+        android:icon="@drawable/ic_taxi"
+        android:title="Viajes"
+        />
+
+    <item
+        android:id="@+id/menu_reservas"
+        android:icon="@drawable/work_24px"
+        android:title="Reservas" />
+
+    <item
+        android:id="@+id/memu_historico"
+        android:title="Historial"
+        android:icon="@drawable/work_history_24px"/>
+
+
+</menu>
