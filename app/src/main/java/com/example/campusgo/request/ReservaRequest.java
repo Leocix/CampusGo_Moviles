@@ -13,7 +13,7 @@ public class ReservaRequest {
 
     private String observacion;
 
-    @SerializedName("detalle_viaje")
+    @SerializedName("detalles_viaje")
     private List<DetalleViajeRequest> detalleViaje;
 
     public ReservaRequest() {

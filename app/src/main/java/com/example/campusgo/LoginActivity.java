@@ -112,6 +112,8 @@ public class LoginActivity extends AppCompatActivity {
                     //Almacenar los datos de la sesión del usuario para que pueda ser utilizado posteriormente
                     LoginData.DATOS_SESION_USUARIO = response.body().getData();
 
+                    LoginStorage.saveUserId(LoginActivity.this, LoginData.DATOS_SESION_USUARIO.getId());
+
                     //Almacenas las credenciales del usuario, cuando el check "Recordar sesión" se encuentre activado
                     if (binding.chkRecordarSesion.isChecked()){
                         LoginStorage.saveCredentials(LoginActivity.this, email, clave);

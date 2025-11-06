@@ -40,6 +40,17 @@ public class ViajeListadoData {
     @SerializedName("viaje_id")
     private int viajeId;
 
+    // --- ¡CAMBIO AÑADIDO AQUÍ! ---
+    // Esta es la lista que viene de la subconsulta JSON
+    @SerializedName("pasajeros_reservados")
+    private List<PasajeroReservaData> pasajerosReservados;
+
+    public List<PasajeroReservaData> getPasajerosReservados() {
+        return pasajerosReservados;
+    }
+    // --- FIN DEL CAMBIO ---
+
+
     public int getAsientosDisponibles() {
         return asientosDisponibles;
     }

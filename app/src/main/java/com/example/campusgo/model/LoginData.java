@@ -36,6 +36,7 @@ public class LoginData {
         this.id = id;
     }
 
+
     public String getNombre() {
         return nombre;
     }

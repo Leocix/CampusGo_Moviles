@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull; // Asegúrate de tener esta
+import androidx.annotation.Nullable; // Asegúrate de tener esta
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +37,7 @@ import com.example.campusgo.response.ReservaResponse;
 import com.example.campusgo.response.ViajeListadoResponse;
 import com.example.campusgo.retrofit.ApiService;
 import com.example.campusgo.retrofit.RetrofitClient;
+import com.example.campusgo.sharedpreferences.LoginStorage; // <-- IMPORTANTE
 import com.example.campusgo.util.Helper;
 import com.example.campusgo.util.Pickers;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -53,10 +56,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class ViajesFragment extends Fragment {
+// --- CORRECCIÓN 1: Implementa la interfaz del adaptador ---
+public class ViajesFragment extends Fragment implements ViajeListadoRecyclerViewAdapter.OnViajeDataChangedListener {
+
     FragmentViajesBinding binding;
     ViajeListadoRecyclerViewAdapter adapter;
-    static ViajeListadoRecyclerViewAdapterAgregado adapterAgregado;
+
+    // --- CORRECCIÓN 2: Haz estas variables NO-ESTÁTICAS ---
+    ViajeListadoRecyclerViewAdapterAgregado adapterAgregado;
     List<ViajeListadoData> list = new ArrayList<>();
     BottomSheetBehavior<View> bottomSheetBehavior;
 
@@ -64,52 +71,42 @@ public class ViajesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentViajesBinding.inflate(inflater, container, false);
 
         //Instanciar el adapter
         adapter = new ViajeListadoRecyclerViewAdapter(getContext(), list);
+        // --- CORRECCIÓN 3: Conecta el listener ---
+        adapter.setOnViajeDataChangedListener(this);
+
         adapterAgregado = new ViajeListadoRecyclerViewAdapterAgregado(getContext(), ViajeListadoData.viajes);
 
         //Configurar el swipeRefresLayout
         binding.swipeRefreshLayoutViajes.setColorSchemeResources(R.color.blue_campusgo_2, R.color.orange_red, R.color._light_green);
         binding.swipeRefreshLayoutViajes.setOnRefreshListener(() -> {
-            //Llamar al método para  refrescar
             mostarViajes();
         });
 
         //Configurar el recyclerView
         binding.recyclerViewViajes.setLayoutManager(new LinearLayoutManager(getContext()));
-        //binding.recyclerViewViajes.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.recyclerViewViajes.setAdapter(adapter);
 
         binding.recyclerViewViajesAgregado.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewViajesAgregado.setAdapter(adapterAgregado);
 
-        //Desactivar el check de los chips
+        // ... (El resto de tu código de chips y filtros está bien) ...
         binding.chipDesde.setCheckable(false);
         binding.chipHasta.setCheckable(false);
         binding.chipAsientosDisponibles.setCheckable(false);
         binding.chipSinRestricciones.setCheckable(false);
-
-        //Imprimir la fecha actual en los chips: desde y hasta
         binding.chipDesde.setText(Helper.obtenerFechaActual());
         binding.chipHasta.setText(Helper.obtenerFechaActual());
-
-        //Gestionar el clic en la X del Chip
         gestionarTachadoX(binding.chipDesde);
         gestionarTachadoX(binding.chipHasta);
         gestionarTachadoX(binding.chipAsientosDisponibles);
         gestionarTachadoX(binding.chipSinRestricciones);
-
-        //Tachar el texto del chip chipSinRestricciones
         binding.chipSinRestricciones.setPaintFlags(binding.chipSinRestricciones.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
-        //Gestionar las fechas al hacer clic en los chips desde y hasta
         gestionarFechaChip(binding.chipDesde);
         gestionarFechaChip(binding.chipHasta);
-
-        //Implementar la búsqueda. Debe ejecutar la búsqueda al hacer clic en el botón buscar del teclado android o al dar enter
         binding.txtBuscar.setOnEditorActionListener((v, actionId, event) -> {
             boolean isEnter = event != null
                     && event.getKeyCode() == KeyEvent.KEYCODE_ENTER
@@ -122,14 +119,10 @@ public class ViajesFragment extends Fragment {
             }
             return false;
         });
-
-        //Implementar el botón clearText de la caja de texto buscar
         binding.tilBuscar.setEndIconOnClickListener(v -> {
             binding.txtBuscar.setText("");
             mostarViajes(); //Call API REST
         });
-
-        //Implementar el botón(chip) filtrar
         binding.chipFiltrar.setOnClickListener(v -> {
             v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP); //Vibrar al presionar en el chip
             mostarViajes();
@@ -147,8 +140,20 @@ public class ViajesFragment extends Fragment {
         //Mostrar viajes
         mostarViajes();
 
+        // --- CORRECCIÓN 4: Llama a esto para el estado inicial ---
+        mostrarViajesAgregados();
+
         return binding.getRoot();
     }
+
+    // --- CORRECCIÓN 5: Implementa el método de la interfaz ---
+    @Override
+    public void onViajeDataChanged() {
+        // Este método se llamará DESDE el adaptador
+        // ¡Esto soluciona que la lista no se actualice!
+        mostrarViajesAgregados();
+    }
+
 
     private void confirmarReserva() {
         //Validar que exista viajes en el resumen
@@ -158,14 +163,20 @@ public class ViajesFragment extends Fragment {
         }
 
         Helper.mensajeConfirmacion(requireContext(), "Confirme", "¿Seguro de registrar la reserva?", "SI RESERVAR", "NO", () -> {
-            //Instanciar el objeto para enviar los datos de la reserva
+
+            // --- CORRECCIÓN 6: Arregla el ID de Pasajero y la Fecha ---
             ReservaRequest reservaRequest = new ReservaRequest();
-            reservaRequest.setPasajeroId(LoginData.DATOS_SESION_USUARIO.getId());
+
+            // NO USES ESTO (falla si la app se reinicia): reservaRequest.setPasajeroId(LoginData.DATOS_SESION_USUARIO.getId());
+            reservaRequest.setPasajeroId(LoginStorage.getUserId(getContext())); // <-- USA ESTO
+
+            // El backend espera AAAA-MM-DD
             reservaRequest.setFechaReserva(Helper.formatearDMA_to_AMD(Helper.obtenerFechaActual()));
+
             if (!binding.txtObservacion.getText().toString().isEmpty()) {
                 reservaRequest.setObservacion(binding.txtObservacion.getText().toString());
             } else {
-                reservaRequest.setObservacion("ok");
+                reservaRequest.setObservacion("Sin observaciones"); // Evita enviar "ok" o null
             }
 
             //Recopilar los datos de cada uno de los viajes seleccionados
@@ -176,22 +187,27 @@ public class ViajesFragment extends Fragment {
             }
             reservaRequest.setDetalleViaje(detalleViajeRequestList);
 
+
             //Llamada a la API REST
             ApiService apiService = RetrofitClient.createService();
             Call<ReservaResponse> call = apiService.registrarReserva(reservaRequest);
+
             call.enqueue(new Callback<ReservaResponse>() {
                 @Override
                 public void onResponse(Call<ReservaResponse> call, Response<ReservaResponse> response) {
                     if (response.isSuccessful()) {
-                        ViajeListadoData.viajes.clear(); //Limpiar los viajes agregados al resumen
-                        mostrarViajesAgregados(); //Refrescar el recyclerView de resumen de viajes
+                        ViajeListadoData.viajes.clear();
+                        mostrarViajesAgregados();
                         mostarViajes(); //Refrescar el recyclerView principal
+
                         binding.txtObservacion.setText("");
                         Toast.makeText(requireContext(), "Reserva registrada satisfactoriamente", Toast.LENGTH_SHORT).show();
-                        mostrarAnimacion();
-                    } else { //http: 500, 401
+                        // mostrarAnimacion(); // Descomenta si tienes este método
+                    } else {
                         try {
-                            JSONObject jsonError = new JSONObject(response.errorBody().string());
+                            String errorBody = response.errorBody().string();
+                            Log.e("ConfirmarReserva", "Error del API (HTTP " + response.code() + "): " + errorBody);
+                            JSONObject jsonError = new JSONObject(errorBody);
                             String error = jsonError.getString("message");
                             Helper.mensajeError(getContext(), "Error al registrar la reserva", error);
                         } catch (IOException | JSONException e) {
@@ -202,11 +218,10 @@ public class ViajesFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<ReservaResponse> call, Throwable t) {
+                    Log.e("ConfirmarReserva", "Fallo en la llamada (onFailure)", t);
                     Helper.mensajeError(getContext(), "Error al acceder al servicio de registro de reservas", t.getMessage());
                 }
             });
-
-
         });
     }
 
@@ -221,10 +236,9 @@ public class ViajesFragment extends Fragment {
             int currentFlags = chip.getPaintFlags();
             final int STRIKE_FLAG = Paint.STRIKE_THRU_TEXT_FLAG;
 
-            if ((currentFlags & STRIKE_FLAG) > 0) { //Si el texto ya se encuentra tachado
-                chip.setPaintFlags(currentFlags & ~STRIKE_FLAG); //Quitando el tachado
+            if ((currentFlags & STRIKE_FLAG) > 0) {
+                chip.setPaintFlags(currentFlags & ~STRIKE_FLAG);
             } else {
-                //Llamar a una función que me permita seleccionar la fecha en un calendario
                 Pickers.obtenerFecha(requireContext(), chip, "posterior");
             }
         });
@@ -235,36 +249,21 @@ public class ViajesFragment extends Fragment {
             int currentFlags = chip.getPaintFlags();
             final int STRIKE_FLAG = Paint.STRIKE_THRU_TEXT_FLAG;
 
-            if ((currentFlags & STRIKE_FLAG) > 0) { //Si el texto ya se encuentra tachado
-                chip.setPaintFlags(currentFlags & ~STRIKE_FLAG); //Quitando el tachado
+            if ((currentFlags & STRIKE_FLAG) > 0) {
+                chip.setPaintFlags(currentFlags & ~STRIKE_FLAG);
             } else {
-                chip.setPaintFlags(currentFlags | STRIKE_FLAG); //Aplicando el tachado
+                chip.setPaintFlags(currentFlags | STRIKE_FLAG);
             }
         });
     }
 
     private void mostarViajes() {
-        //Capturar los datos para realizar la búsqueda y aplicar filtros
+        // ... (Tu código de `mostarViajes` está bien) ...
+        binding.swipeRefreshLayoutViajes.setRefreshing(true);
         String textoBusqueda = binding.txtBuscar.getText() != null ? binding.txtBuscar.getText().toString().trim() : "";
-        /*
-        String desde="";
-        if((binding.chipDesde.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0){ //Si el texto tachado
-            desde = "";
-        }else{
-            desde = Helper.formatearDMA_to_AMD(binding.chipDesde.getText().toString());
-        }
-         */
 
         String desde = (binding.chipDesde.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0 ? ""
                 : Helper.formatearDMA_to_AMD(binding.chipDesde.getText().toString());
-
-        /*
-        String hasta="";
-        if((binding.chipHasta.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0){ //Si el texto tachado
-            hasta = "";
-        }else{
-            hasta = Helper.formatearDMA_to_AMD(binding.chipHasta.getText().toString());
-        }*/
 
         String hasta = (binding.chipHasta.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0 ? ""
                 : Helper.formatearDMA_to_AMD(binding.chipHasta.getText().toString());
@@ -279,7 +278,6 @@ public class ViajesFragment extends Fragment {
         Log.e("FECHA SIN RESTRICCIONES", sinRestricciones + "");
 
 
-        //LLamar al endpoint para obtener la lista de viajes
         ApiService apiService = RetrofitClient.createService();
         Call<ViajeListadoResponse> call = apiService.listarViajes(new ViajeListadoRequest("destino", textoBusqueda, asientosDisponibles, sinRestricciones, desde, hasta));
         call.enqueue(new Callback<ViajeListadoResponse>() {
@@ -288,9 +286,9 @@ public class ViajesFragment extends Fragment {
                 if (response.isSuccessful()) {
                     list.clear();
                     list.addAll(Arrays.asList(response.body().getData()));
-                    adapter.notifyDataSetChanged(); //Refrescar los registros en el recyclerview
+                    adapter.notifyDataSetChanged();
                     binding.swipeRefreshLayoutViajes.setRefreshing(false);
-                } else { //http: 500, 401
+                } else {
                     try {
                         JSONObject jsonError = new JSONObject(response.errorBody().string());
                         String error = jsonError.getString("message");
@@ -308,27 +306,41 @@ public class ViajesFragment extends Fragment {
         });
     }
 
-    public static void mostrarViajesAgregados() {
-        adapterAgregado.notifyDataSetChanged(); //Refrescar los registros en el recyclerview
+    // --- CORRECCIÓN 9: Haz este método NO-ESTÁTICO ---
+    public void mostrarViajesAgregados() {
+        if (adapterAgregado != null) {
+            adapterAgregado.notifyDataSetChanged(); //Refrescar los registros en el recyclerview
+        }
+
+        // Controlar el estado del BottomSheet
+        if (bottomSheetBehavior != null) {
+            if (ViajeListadoData.viajes.isEmpty()) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            } else {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        }
     }
 
     private void mostrarAnimacion() {
         //Configurar la animación de la app
-        binding.layoutControlesReserva.setVisibility(View.GONE);
-        binding.layoutAnimacion.setVisibility(View.VISIBLE);
-        binding.lottieAnimationView.setAnimation("ok2.json");
-        binding.lottieAnimationView.playAnimation();
-        binding.lottieAnimationView.setRepeatCount(1);
+        // (Asegúrate de que 'layoutControlesReserva' y 'layoutAnimacion' existan en tu fragment_viajes.xml)
+        // binding.layoutControlesReserva.setVisibility(View.GONE);
+        // binding.layoutAnimacion.setVisibility(View.VISIBLE);
+        // binding.lottieAnimationView.setAnimation("ok2.json");
+        // binding.lottieAnimationView.playAnimation();
+        // binding.lottieAnimationView.setRepeatCount(1);
 
         //Cargar el siguiente activity (login)
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                binding.layoutControlesReserva.setVisibility(View.VISIBLE);
-                binding.layoutAnimacion.setVisibility(View.GONE);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED); //Plegado
+                // binding.layoutControlesReserva.setVisibility(View.VISIBLE);
+                // binding.layoutAnimacion.setVisibility(View.GONE);
+                if (bottomSheetBehavior != null) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED); //Plegado
+                }
             }
-        }, 5000); //3 segundos
+        }, 3000); //3 segundos (cambiado de 5000)
     }
-
 }
