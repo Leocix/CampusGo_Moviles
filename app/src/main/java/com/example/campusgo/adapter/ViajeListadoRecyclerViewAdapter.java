@@ -141,8 +141,6 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
                     ViajeListadoData viaje = list.get(getAbsoluteAdapterPosition());
                     ViajeListadoData.viajes.add(viaje);
                     Toast.makeText(context, "Viaje Agregado", Toast.LENGTH_SHORT).show();
-                    ViajesFragment.mostrarViajesAgregados();
-
                     // ¡Avisa al Fragment que los datos cambiaron!
                     if (mDataChangedListener != null) {
                         mDataChangedListener.onViajeDataChanged(); // <-- ESTO ARREGLA EL CRASH
