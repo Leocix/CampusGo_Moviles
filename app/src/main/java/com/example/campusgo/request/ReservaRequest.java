@@ -20,8 +20,6 @@ public class ReservaRequest {
 
     }
 
-
-
     public int getPasajeroId() {
         return pasajeroId;
     }

@@ -1,52 +1,62 @@
 package com.example.campusgo.request;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ViajeListadoRequest {
-    private String campo_busqueda;
-    private String texto_busqueda;
-    private boolean asientos_disponibles;
-    private boolean sin_restricciones;
+    @SerializedName("campo_busqueda")
+    private String campoBusqueda;
+
+    @SerializedName("texto_busqueda")
+    private String textoBusqueda;
+
+    @SerializedName("asientos_disponibles")
+    private boolean asientosDisponibles;
+
+    @SerializedName("sin_restricciones")
+    private boolean sinRestricciones;
+
     private String desde;
     private String hasta;
 
-    public ViajeListadoRequest(String campo_busqueda, String texto_busqueda, boolean asientos_disponibles, boolean sin_restricciones, String desde, String hasta) {
-        this.campo_busqueda = campo_busqueda;
-        this.texto_busqueda = texto_busqueda;
-        this.asientos_disponibles = asientos_disponibles;
-        this.sin_restricciones = sin_restricciones;
+    public ViajeListadoRequest(String campoBusqueda, String textoBusqueda, boolean asientosDisponibles, boolean sinRestricciones, String desde, String hasta) {
+        this.campoBusqueda = campoBusqueda;
+        this.textoBusqueda = textoBusqueda;
+        this.asientosDisponibles = asientosDisponibles;
+        this.sinRestricciones = sinRestricciones;
         this.desde = desde;
         this.hasta = hasta;
     }
 
-    public String getCampo_busqueda() {
-        return campo_busqueda;
+    public String getCampoBusqueda() {
+        return campoBusqueda;
     }
 
-    public void setCampo_busqueda(String campo_busqueda) {
-        this.campo_busqueda = campo_busqueda;
+    public void setCampoBusqueda(String campoBusqueda) {
+        this.campoBusqueda = campoBusqueda;
     }
 
-    public String getTexto_busqueda() {
-        return texto_busqueda;
+    public String getTextoBusqueda() {
+        return textoBusqueda;
     }
 
-    public void setTexto_busqueda(String texto_busqueda) {
-        this.texto_busqueda = texto_busqueda;
+    public void setTextoBusqueda(String textoBusqueda) {
+        this.textoBusqueda = textoBusqueda;
     }
 
-    public boolean isAsientos_disponibles() {
-        return asientos_disponibles;
+    public boolean isAsientosDisponibles() {
+        return asientosDisponibles;
     }
 
-    public void setAsientos_disponibles(boolean asientos_disponibles) {
-        this.asientos_disponibles = asientos_disponibles;
+    public void setAsientosDisponibles(boolean asientosDisponibles) {
+        this.asientosDisponibles = asientosDisponibles;
     }
 
-    public boolean isSin_restricciones() {
-        return sin_restricciones;
+    public boolean isSinRestricciones() {
+        return sinRestricciones;
     }
 
-    public void setSin_restricciones(boolean sin_restricciones) {
-        this.sin_restricciones = sin_restricciones;
+    public void setSinRestricciones(boolean sinRestricciones) {
+        this.sinRestricciones = sinRestricciones;
     }
 
     public String getDesde() {

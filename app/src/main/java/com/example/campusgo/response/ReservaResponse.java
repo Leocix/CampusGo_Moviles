@@ -2,7 +2,7 @@ package com.example.campusgo.response;
 
 public class ReservaResponse {
     private String message;
-    private Boolean status;
+    private boolean status;
 
     public String getMessage() {
         return message;
@@ -12,11 +12,11 @@ public class ReservaResponse {
         this.message = message;
     }
 
-    public Boolean getStatus() {
+    public boolean isStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 }

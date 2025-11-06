@@ -7,11 +7,11 @@ public class DetalleViajeRequest {
     private int viajeId;
 
     @SerializedName("estado_id")
-    private int estadoID;
+    private int estadoId;
 
-    public DetalleViajeRequest(int viajeId, int estadoID) {
+    public DetalleViajeRequest(int viajeId, int estadoId) {
         this.viajeId = viajeId;
-        this.estadoID = estadoID;
+        this.estadoId = estadoId;
     }
 
     public int getViajeId() {
@@ -22,11 +22,11 @@ public class DetalleViajeRequest {
         this.viajeId = viajeId;
     }
 
-    public int getEstadoID() {
-        return estadoID;
+    public int getEstadoId() {
+        return estadoId;
     }
 
-    public void setEstadoID(int estadoID) {
-        this.estadoID = estadoID;
+    public void setEstadoId(int estadoId) {
+        this.estadoId = estadoId;
     }
 }

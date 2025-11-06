@@ -6,64 +6,54 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViajeListadoData {
-
-    @SerializedName("viaje_id")
-    private int viaje_id;
-
-    public int getViaje_id() {
-        return viaje_id;
-    }
-
-    public void setViaje_id(int viaje_id) {
-        this.viaje_id = viaje_id;
-    }
-
     @SerializedName("asientos_disponibles")
-    private int asientos_disponibles;
+    private int asientosDisponibles;
 
     @SerializedName("asientos_ofertados")
-    private String asientos_ofertados;
+    private int asientosOfertados;
 
     private String destino;
     private String estado;
 
     @SerializedName("fecha_hora_salida")
-    private String fecha_hora_salida;
+    private String FechaHoraSalida;
 
     @SerializedName("lat_destino")
-    private String latdestino;
+    private double latDestino;
 
     @SerializedName("lat_partida")
-    private String latpartida;
+    private double latPartida;
 
     @SerializedName("lng_destino")
-    private String lngdestino;
+    private double lngDestino;
 
     @SerializedName("lng_partida")
-    private String lngpartida;
+    private double lngPartida;
 
     @SerializedName("punto_partida")
-    private String punto_partida;
+    private String puntoPartida;
 
-    @SerializedName("restricciones")
     private String restricciones;
 
     private VehiculoData vehiculo;
 
-    public int getAsientos_disponibles() {
-        return asientos_disponibles;
+    @SerializedName("viaje_id")
+    private int viajeId;
+
+    public int getAsientosDisponibles() {
+        return asientosDisponibles;
     }
 
-    public void setAsientos_disponibles(int asientos_disponibles) {
-        this.asientos_disponibles = asientos_disponibles;
+    public void setAsientosDisponibles(int asientosDisponibles) {
+        this.asientosDisponibles = asientosDisponibles;
     }
 
-    public String getAsientos_ofertados() {
-        return asientos_ofertados;
+    public int getAsientosOfertados() {
+        return asientosOfertados;
     }
 
-    public void setAsientos_ofertados(String asientos_ofertados) {
-        this.asientos_ofertados = asientos_ofertados;
+    public void setAsientosOfertados(int asientosOfertados) {
+        this.asientosOfertados = asientosOfertados;
     }
 
     public String getDestino() {
@@ -82,52 +72,52 @@ public class ViajeListadoData {
         this.estado = estado;
     }
 
-    public String getFecha_hora_salida() {
-        return fecha_hora_salida;
+    public String getFechaHoraSalida() {
+        return FechaHoraSalida;
     }
 
-    public void setFecha_hora_salida(String fecha_hora_salida) {
-        this.fecha_hora_salida = fecha_hora_salida;
+    public void setFechaHoraSalida(String fechaHoraSalida) {
+        FechaHoraSalida = fechaHoraSalida;
     }
 
-    public String getLatdestino() {
-        return latdestino;
+    public double getLatDestino() {
+        return latDestino;
     }
 
-    public void setLatdestino(String latdestino) {
-        this.latdestino = latdestino;
+    public void setLatDestino(double latDestino) {
+        this.latDestino = latDestino;
     }
 
-    public String getLatpartida() {
-        return latpartida;
+    public double getLatPartida() {
+        return latPartida;
     }
 
-    public void setLatpartida(String latpartida) {
-        this.latpartida = latpartida;
+    public void setLatPartida(double latPartida) {
+        this.latPartida = latPartida;
     }
 
-    public String getLngdestino() {
-        return lngdestino;
+    public double getLngDestino() {
+        return lngDestino;
     }
 
-    public void setLngdestino(String lngdestino) {
-        this.lngdestino = lngdestino;
+    public void setLngDestino(double lngDestino) {
+        this.lngDestino = lngDestino;
     }
 
-    public String getLngpartida() {
-        return lngpartida;
+    public double getLngPartida() {
+        return lngPartida;
     }
 
-    public void setLngpartida(String lngpartida) {
-        this.lngpartida = lngpartida;
+    public void setLngPartida(double lngPartida) {
+        this.lngPartida = lngPartida;
     }
 
-    public String getPunto_partida() {
-        return punto_partida;
+    public String getPuntoPartida() {
+        return puntoPartida;
     }
 
-    public void setPunto_partida(String punto_partida) {
-        this.punto_partida = punto_partida;
+    public void setPuntoPartida(String puntoPartida) {
+        this.puntoPartida = puntoPartida;
     }
 
     public String getRestricciones() {
@@ -146,6 +136,15 @@ public class ViajeListadoData {
         this.vehiculo = vehiculo;
     }
 
+    public int getViajeId() {
+        return viajeId;
+    }
+
+    public void setViajeId(int viajeId) {
+        this.viajeId = viajeId;
+    }
+
     //ArrayList que permite gestionar los viajes agregados por el usuario
     public static List<ViajeListadoData> viajes = new ArrayList<>();
+
 }

@@ -39,16 +39,4 @@ public class LoginStorage {
     }
 
 
-    public static int getUserId(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("user_credentials", Context.MODE_PRIVATE);
-        return sharedPreferences.getInt("user_id", 0);
-    }
-    public static void saveUserId(Context context, int userId) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("user_credentials", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("user_id", userId);
-        editor.apply();
-
-    }
-
 }

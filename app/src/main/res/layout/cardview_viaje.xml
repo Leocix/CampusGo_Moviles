@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="5dp">
-        <!-- Encabezado: origen, destino, estado -->
+        <!--  Encabezado: origen, destino, estado  -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
-                <!-- Destino -->
+                <!--  Destino  -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -57,9 +57,8 @@
                         android:textStyle="bold"
                         android:tooltipText="Destino"
                         tools:text="USAT" />
-                    ...
                 </LinearLayout>
-                <!-- Línea origen -> destino -->
+                <!--  Línea origen -> destino  -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -73,9 +72,8 @@
                         android:layout_height="15dp"
                         android:src="@drawable/arrow_warm_up_24px"
                         android:tooltipText="Destino" />
-                    ...
                 </LinearLayout>
-                <!-- Origen -->
+                <!--  Origen  -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -99,9 +97,7 @@
                         android:textSize="15sp"
                         android:textStyle="normal"
                         tools:text="Parque central de Chiclayo" />
-                    ...
                 </LinearLayout>
-                ...
             </LinearLayout>
 
             <LinearLayout
@@ -143,7 +139,6 @@
                         android:src="@mipmap/ic_launcher"
                         app:civ_border_color="@color/blue_campusgo_2"
                         app:civ_border_width="1dp" />
-                    ...
                 </LinearLayout>
 
                 <com.google.android.material.chip.Chip
@@ -158,11 +153,9 @@
                     app:chipIconVisible="true"
                     app:ensureMinTouchTargetSize="false"
                     tools:text="REGISTRADO" />
-                ...
             </LinearLayout>
-            ...
         </LinearLayout>
-        <!-- Fecha y hora -->
+        <!--  Fecha y hora  -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -173,7 +166,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/ic_date" />
+                android:src="@drawable/ic_reservar" />
 
             <TextView
                 android:id="@+id/txtFechaHoraSalida"
@@ -182,9 +175,8 @@
                 android:layout_marginStart="8dp"
                 android:textSize="13sp"
                 tools:text="23-10-2025 13:15:00" />
-            ...
         </LinearLayout>
-        <!-- Asientos -->
+        <!--  Asientos  -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -204,9 +196,8 @@
                 android:layout_marginStart="8dp"
                 android:textSize="13sp"
                 tools:text="4 / 4 asientos disponibles" />
-            ...
         </LinearLayout>
-        <!-- Vehículo -->
+        <!--  Vehículo  -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -226,9 +217,8 @@
                 android:layout_marginStart="8dp"
                 android:textSize="13sp"
                 tools:text="Toyota Corolla • CCB-850 • Rojo" />
-            ...
         </LinearLayout>
-        <!-- Restricciones -->
+        <!--  Restricciones  -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -252,9 +242,8 @@
                 android:textSize="13sp"
                 android:textStyle="italic"
                 tools:text="No se admiten mascotas." />
-            ...
         </LinearLayout>
-        <!-- Botones -->
+        <!--  Botones  -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -286,9 +275,6 @@
                 app:iconTint="#ff0000"
                 app:strokeColor="#ff0000"
                 app:strokeWidth="1dp" />
-            ...
         </LinearLayout>
-        ...
     </LinearLayout>
-    ...
 </com.google.android.material.card.MaterialCardView>

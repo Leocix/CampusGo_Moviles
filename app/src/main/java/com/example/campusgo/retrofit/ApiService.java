@@ -46,7 +46,7 @@ public interface ApiService {
     @POST("/viaje/listar")
     Call<ViajeListadoResponse> listarViajes(@Body ViajeListadoRequest request);
 
-    @POST("/viaje/registrar")
+    @POST("/reserva/registrar")
     Call<ReservaResponse> registrarReserva(@Body ReservaRequest request);
 
 

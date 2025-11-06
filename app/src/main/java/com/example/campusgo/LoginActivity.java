@@ -61,8 +61,8 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void leerCredencialesAlmacendas() {
-        if (LoginStorage.autoLogin(LoginActivity.this)) { //Si se ha encontrado credenciales almacenadas
+    private void leerCredencialesAlmacendas(){
+        if (LoginStorage.autoLogin(LoginActivity.this)){ //Si se ha encontrado credenciales almacenadas
             String email = LoginStorage.getCredentials(LoginActivity.this)[0]; //0=email
             String clave = LoginStorage.getCredentials(LoginActivity.this)[1]; //1=clave
 
@@ -73,30 +73,16 @@ public class LoginActivity extends AppCompatActivity {
             //LLamar al botón login
             login();
         }
-
-
-        //Implementar el botón registrate
-        binding.btnRegistrate.setOnClickListener(v -> {
-
-            registrar();
-        });
-    }
-
-    private void registrar() {
-        Intent intent = new Intent(LoginActivity.this, RegistrarActivity.class);
-        startActivity(intent);
-        finish();
-
     }
 
     private void login() {
         String email = binding.txtEmail.getText().toString();
         String clave = binding.txtPassword.getText().toString();
 
-        if (email.isEmpty()) {
+        if (email.isEmpty()){
             Toast.makeText(this, "Ingrese el email", Toast.LENGTH_SHORT).show();
             return;
-        } else if (clave.isEmpty()) {
+        }else if (clave.isEmpty()) {
             Toast.makeText(this, "Ingrese la contraseña", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -113,26 +99,21 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if (response.isSuccessful()) {
-                    // Obtenemos el objeto de datos una sola vez para ser más eficientes
-                    LoginData data = response.body().getData();
-                    LoginStorage.saveUserId(LoginActivity.this, data.getId());
+                if (response.isSuccessful()){
+                    String nombre = response.body().getData().getNombre();
+                    int id = response.body().getData().getId();
 
-                    // Imprimimos los valores para depuración
-                    Log.d("LOGIN_SUCCESS", "Nombre: " + data.getNombre());
-                    Log.d("LOGIN_SUCCESS", "ID: " + data.getId());
-                    // ESTA ES LA LÍNEA DE DIAGNÓSTICO CLAVE
-                    Log.d("LOGIN_ROL_CHECK", "El rolId recibido de la API es: " + data.getRolId());
-
+                    Log.e("LOGIN", "NOMBRE: " + nombre);
+                    Log.e("LOGIN", "ID: " + id);
 
                     //Almacenar el token de la sesión del usuario para que pueda ser utilizado posteriormente
-                    RetrofitClient.API_TOKEN = data.getToken();
+                    RetrofitClient.API_TOKEN = response.body().getData().getToken();
 
                     //Almacenar los datos de la sesión del usuario para que pueda ser utilizado posteriormente
-                    LoginData.DATOS_SESION_USUARIO = data;
+                    LoginData.DATOS_SESION_USUARIO = response.body().getData();
 
                     //Almacenas las credenciales del usuario, cuando el check "Recordar sesión" se encuentre activado
-                    if (binding.chkRecordarSesion.isChecked()) {
+                    if (binding.chkRecordarSesion.isChecked()){
                         LoginStorage.saveCredentials(LoginActivity.this, email, clave);
                     }
 
@@ -148,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     Toast.makeText(LoginActivity.this, "Login satisfactorio", Toast.LENGTH_SHORT).show();
 
-                } else { //http status = 400, 401, 500, etc.
+                }else{ //http status = 400, 401, 500, etc.
                     //Si hay un error en las credenciales, entonces se muestra el layout de credenciales y se oculta la barra de progreso
                     binding.progressBar.setVisibility(View.GONE);
                     binding.layoutCredenciales.setVisibility(View.VISIBLE);
@@ -163,10 +144,10 @@ public class LoginActivity extends AppCompatActivity {
                         binding.txtEmail.setText("");
                         binding.txtPassword.setText("");
                         binding.txtEmail.requestFocus();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                    }catch (IOException e){
+                        throw  new RuntimeException(e);
+                    }catch (JSONException e){
+                        throw  new RuntimeException(e);
                     }
 
                 }
