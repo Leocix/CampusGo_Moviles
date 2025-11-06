@@ -1,7 +1,7 @@
 package com.example.campusgo.adapter;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
+import android.content.res.ColorStateList; // <-- Importante
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-// import com.example.campusgo.ViajesFragment; // Ya no necesitas esta importación
-import com.example.campusgo.model.ViajeListadoData;
+// import com.example.campusgo.ViajesFragment; // <-- NO importes el Fragment
+import com.example.campusgo.ViajesFragment;
+import com.example.campusgo.model.ViajeListadoData; // <-- Importante
 import com.example.campusgo.util.Helper;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
@@ -25,17 +26,17 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
     private Context context;
     private List<ViajeListadoData> list;
 
-    // --- CORRECCIÓN 1: Añade la interfaz y el listener ---
+    // --- CORRECCIÓN 1: Interfaz y Listener ---
     public interface OnViajeDataChangedListener {
         void onViajeDataChanged();
     }
-
     private OnViajeDataChangedListener mDataChangedListener;
 
     public void setOnViajeDataChangedListener(OnViajeDataChangedListener listener) {
         this.mDataChangedListener = listener;
     }
     // --- Fin Corrección 1 ---
+
 
     public ViajeListadoRecyclerViewAdapter(Context context, List<ViajeListadoData> list) {
         this.context = context;
@@ -62,14 +63,14 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        // ... (declaraciones de tus vistas) ...
+        //Enlazar y declarar los controles del cardview
         TextView txtDestino, txtPuntoPartida, txtFechaHoraSalida, txtAsientos, txtVehiculo, txtRestricciones;
         Chip chipEstado;
         MaterialButton btnAgregar, btnVerRuta;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // ... (enlaces de tus vistas) ...
+            //Enlazar controles
             txtDestino = itemView.findViewById(R.id.txtDestino);
             txtPuntoPartida = itemView.findViewById(R.id.txtPuntoPartida);
             txtFechaHoraSalida = itemView.findViewById(R.id.txtFechaHoraSalida);
@@ -80,7 +81,7 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
             btnAgregar = itemView.findViewById(R.id.btnAgregar);
             btnVerRuta = itemView.findViewById(R.id.btnVerRuta);
 
-            itemView.setOnClickListener(this);
+            //Configurar al cardview para que reconozca el evento click
             btnAgregar.setOnClickListener(this);
             btnVerRuta.setOnClickListener(this);
         }
@@ -114,7 +115,6 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
                 btnAgregar.setIconResource(R.drawable.ic_check);
             } else {
                 btnAgregar.setText("Agregar");
-                // Asegúrate de que R.color.blue_campusgo_1 exista, si no, usa R.color.blue_campusgo_3
                 btnAgregar.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.blue_campusgo_1)));
                 btnAgregar.setIconResource(R.drawable.calendar_add_on_24px);
             }
@@ -123,51 +123,68 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
 
         @Override
         public void onClick(View v) {
-
+            if (getAbsoluteAdapterPosition() == RecyclerView.NO_POSITION) {
+                return; // Evita crash si se hace clic mientras se elimina
+            }
             int viajeID = list.get(getAbsoluteAdapterPosition()).getViaje_id();
+
             if (v.getId() == R.id.btnAgregar) {
 
                 // --- CORRECCIÓN 3: Llama al listener en lugar de al fragment ---
                 if (btnAgregar.getText().equals("Agregar")) {
+                    // Actualiza la UI inmediatamente
                     btnAgregar.setText("Agregado");
                     btnAgregar.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.green)));
                     btnAgregar.setIconResource(R.drawable.ic_check);
 
+                    // Agrega a la lista estática
                     ViajeListadoData viaje = list.get(getAbsoluteAdapterPosition());
                     ViajeListadoData.viajes.add(viaje);
                     Toast.makeText(context, "Viaje Agregado", Toast.LENGTH_SHORT).show();
+                    ViajesFragment.mostrarViajesAgregados();
 
+                    // ¡Avisa al Fragment que los datos cambiaron!
                     if (mDataChangedListener != null) {
-                        mDataChangedListener.onViajeDataChanged(); // <-- AVISA AL FRAGMENT
+                        mDataChangedListener.onViajeDataChanged(); // <-- ESTO ARREGLA EL CRASH
                     }
 
                 } else {
                     Helper.mensajeConfirmacion(context, "Confirme", "¿Desea retirar el viaje de su lista?", "Sí", "No", () -> {
+                        // Busca y elimina de la lista estática
                         for (int i = 0; i < ViajeListadoData.viajes.size(); i++) {
                             if (ViajeListadoData.viajes.get(i).getViaje_id() == viajeID) {
                                 ViajeListadoData.viajes.remove(i);
                                 break; // Importante
                             }
                         }
+
+                        // Actualiza la UI inmediatamente
                         btnAgregar.setText("Agregar");
                         btnAgregar.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.blue_campusgo_1)));
                         btnAgregar.setIconResource(R.drawable.calendar_add_on_24px);
                         Toast.makeText(context, "Viaje Retirado", Toast.LENGTH_SHORT).show();
 
+                        // ¡Avisa al Fragment que los datos cambiaron!
                         if (mDataChangedListener != null) {
-                            mDataChangedListener.onViajeDataChanged(); // <-- AVISA AL FRAGMENT
+                            mDataChangedListener.onViajeDataChanged();
                         }
                     });
                 }
 
                 // (La llamada a mostrarLista() puede quedarse para depuración)
-                //mostrarLista();
+                // mostrarLista();
 
             } else if (v.getId() == R.id.btnVerRuta) {
                 Toast.makeText(context, "Mostrar la ruta en google maps" + viajeID, Toast.LENGTH_SHORT).show();
             }
         }
 
-        // ... (mostrarLista) ...
+        public void mostrarLista(){
+            //Verificar su los viajes se han agregado a la lista
+            Log.d("VIAJES_LISTA", "--- Contenido de ViajeListadoData.viajes ---");
+            for (ViajeListadoData viaje : ViajeListadoData.viajes) {
+                Log.d("VIAJES_LISTA", "ID: " + viaje.getViaje_id() + ", Destino: " + viaje.getDestino());
+            }
+        }
     }
 }
