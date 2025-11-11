@@ -22,6 +22,13 @@
             android:paddingEnd="12dp"
             android:paddingBottom="0dp">
             <!--  Buscador  -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewViajes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                tools:listitem="@layout/cardview_viaje" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilBuscar"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -120,12 +127,6 @@
                     app:ensureMinTouchTargetSize="false" />
             </LinearLayout>
             <!--  Lista de viajes  -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewViajes"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                tools:listitem="@layout/cardview_viaje" />
         </LinearLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <!--  BottomSheet  -->
@@ -217,4 +218,13 @@
             android:layout_weight="1"
             tools:listitem="@layout/cardview_reserva" />
     </LinearLayout>
+    <!--  Boton de agregar viajes  -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAgregarViaje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="Agregar Viaje"
+        app:srcCompat="@drawable/add_24px" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

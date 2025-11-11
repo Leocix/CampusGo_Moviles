@@ -41,7 +41,7 @@ public class ViajeListadoRecyclerViewAdapter extends RecyclerView.Adapter<ViajeL
     private Context context;
     private List<ViajeListadoData> list;
 
-    // --- CORRECCIÓN 1: Interfaz y Listener ---
+
     public interface OnViajeDataChangedListener {
         void onViajeDataChanged();
     }

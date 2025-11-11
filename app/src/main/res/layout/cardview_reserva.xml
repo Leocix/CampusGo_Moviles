@@ -8,7 +8,7 @@
     android:layout_marginTop="0dp"
     android:layout_marginRight="0dp"
     android:layout_marginBottom="10dp"
-    android:backgroundTint="@color/blue"
+    android:backgroundTint="@color/alice_blue"
     app:cardCornerRadius="10dp"
     app:cardUseCompatPadding="false">
 

@@ -5,6 +5,26 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/nav_principal_usuario">
 
+    <!-- Tu Fragment de Viajes, ahora registrado -->
+    <fragment
+        android:id="@+id/nav_viajes"
+        android:name="com.example.campusgo.ViajesFragment"
+        android:label="Viajes"
+        tools:layout="@layout/fragment_viajes" >
+        <!-- Esta es la acción (la "ruta") para ir a AgregarViajesFragment -->
+        <action
+            android:id="@+id/action_viajesFragment_to_agregarViajeFragment"
+            app:destination="@id/nav_agregar_viaje" />
+    </fragment>
+
+    <!-- Tu nuevo Fragment para agregar viajes -->
+    <fragment
+        android:id="@+id/nav_agregar_viaje"
+        android:name="com.example.campusgo.AgregarViajesFragment"
+        android:label="Agregar Viaje"
+        tools:layout="@layout/fragment_agregar_viajes" />
+
+    <!-- Tus otros fragments -->
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.campusgo.ui.home.HomeFragment"

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull; // Asegúrate de tener esta
 import androidx.annotation.Nullable; // Asegúrate de tener esta
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -60,12 +61,14 @@ import retrofit2.Response;
 public class ViajesFragment extends Fragment implements ViajeListadoRecyclerViewAdapter.OnViajeDataChangedListener {
 
     FragmentViajesBinding binding;
+
     ViajeListadoRecyclerViewAdapter adapter;
 
     // --- CORRECCIÓN 2: Haz estas variables NO-ESTÁTICAS ---
     ViajeListadoRecyclerViewAdapterAgregado adapterAgregado;
     List<ViajeListadoData> list = new ArrayList<>();
     BottomSheetBehavior<View> bottomSheetBehavior;
+
 
 
     @Override
@@ -92,6 +95,14 @@ public class ViajesFragment extends Fragment implements ViajeListadoRecyclerView
 
         binding.recyclerViewViajesAgregado.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewViajesAgregado.setAdapter(adapterAgregado);
+        // Dentro de onViewCreated, después de tus otras configuraciones...
+        binding.fabAgregarViaje.setOnClickListener(v -> {
+            // Usamos el NavController para navegar hacia el fragmento de agregar viaje.
+            // Reemplaza 'R.id.action_viajesFragment_to_agregarViajeFragment'
+            // con el ID de la acción que hayas definido en tu nav_graph.xml.
+            NavHostFragment.findNavController(this).navigate(R.id.action_viajesFragment_to_agregarViajeFragment);
+        });
+
 
         // ... (El resto de tu código de chips y filtros está bien) ...
         binding.chipDesde.setCheckable(false);
@@ -167,10 +178,10 @@ public class ViajesFragment extends Fragment implements ViajeListadoRecyclerView
             // --- CORRECCIÓN 6: Arregla el ID de Pasajero y la Fecha ---
             ReservaRequest reservaRequest = new ReservaRequest();
 
-            // NO USES ESTO (falla si la app se reinicia): reservaRequest.setPasajeroId(LoginData.DATOS_SESION_USUARIO.getId());
-            reservaRequest.setPasajeroId(LoginStorage.getUserId(getContext())); // <-- USA ESTO
+            // (falla y la app se reinicia): reservaRequest.setPasajeroId(LoginData.DATOS_SESION_USUARIO.getId());
+            reservaRequest.setPasajeroId(LoginStorage.getUserId(getContext()));
 
-            // El backend espera AAAA-MM-DD
+
             reservaRequest.setFechaReserva(Helper.formatearDMA_to_AMD(Helper.obtenerFechaActual()));
 
             if (!binding.txtObservacion.getText().toString().isEmpty()) {
