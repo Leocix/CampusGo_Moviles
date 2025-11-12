@@ -1,5 +1,7 @@
 package com.example.campusgo.model;
 
+import androidx.annotation.NonNull;
+
 public class VehiculoData {
     private String color;
     private int id;
@@ -55,4 +57,12 @@ public class VehiculoData {
     public void setModelo(String modelo) {
         this.modelo = modelo;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        // Esto es lo que el usuario verá en la lista desplegable
+        return marca + " " + modelo + " (" + placa + ")";
+    }
+
 }

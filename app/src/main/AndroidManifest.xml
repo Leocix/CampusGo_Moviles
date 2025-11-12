@@ -8,8 +8,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
 
@@ -55,10 +56,15 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <activity
+            android:name=".MapaSeleccionadoActivity"
+            android:label="Seleccionar Ubicación"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCSUWGgNZsQXC59AXXZ6MKWl8x9D95n2G4" />
+
+
     </application>
 
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyCSUWGgNZsQXC59AXXZ6MKWl8x9D95n2G4" />
 
 </manifest>

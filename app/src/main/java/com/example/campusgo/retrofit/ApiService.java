@@ -9,6 +9,7 @@ import com.example.campusgo.request.ViajeRequest;
 import com.example.campusgo.response.LoginResponse;
 import com.example.campusgo.response.ReservaResponse;
 import com.example.campusgo.response.UsuarioResponse;
+import com.example.campusgo.response.VehiculoListadoResponse;
 import com.example.campusgo.response.ViajeListadoResponse;
 import com.example.campusgo.response.ViajeResponse;
 
@@ -56,7 +57,7 @@ public interface ApiService {
 
     // Endpoint para obtener los vehículos de un conductor para el Spinner
     @GET("/vehiculo/listar/{conductor_id}")
-    Call<List<VehiculoData>> listarVehiculosPorConductor(@Path("conductor_id") int conductorId);
+    Call<VehiculoListadoResponse> listarVehiculosPorConductor(@Path("conductor_id") int conductorId);
 
     // --- CORREGIDO ---
     // Endpoint para registrar un nuevo viaje.
