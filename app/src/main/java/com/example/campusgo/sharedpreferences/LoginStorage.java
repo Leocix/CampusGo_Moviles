@@ -49,4 +49,16 @@ public class LoginStorage {
         editor.apply();
     }
 
+    public static void saveUserRol(Context context, int rolId) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("user_credentials", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("user_rol", rolId);
+        editor.apply();
+    }
+
+    public static int getUserRol(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("user_credentials", Context.MODE_PRIVATE);
+        return sharedPreferences.getInt("user_rol", 0);
+    }
+
 }

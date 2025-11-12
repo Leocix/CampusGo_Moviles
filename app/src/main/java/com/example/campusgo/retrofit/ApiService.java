@@ -1,13 +1,18 @@
 package com.example.campusgo.retrofit;
 
 import com.example.campusgo.model.UsuarioData;
+import com.example.campusgo.model.VehiculoData;
 import com.example.campusgo.request.LoginRequest;
 import com.example.campusgo.request.ReservaRequest;
 import com.example.campusgo.request.ViajeListadoRequest;
+import com.example.campusgo.request.ViajeRequest;
 import com.example.campusgo.response.LoginResponse;
 import com.example.campusgo.response.ReservaResponse;
 import com.example.campusgo.response.UsuarioResponse;
 import com.example.campusgo.response.ViajeListadoResponse;
+import com.example.campusgo.response.ViajeResponse;
+
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -49,6 +54,13 @@ public interface ApiService {
     @POST("/reserva/registrar")
     Call<ReservaResponse> registrarReserva(@Body ReservaRequest request);
 
+    // Endpoint para obtener los vehículos de un conductor para el Spinner
+    @GET("/vehiculo/listar/{conductor_id}")
+    Call<List<VehiculoData>> listarVehiculosPorConductor(@Path("conductor_id") int conductorId);
 
-
+    // --- CORREGIDO ---
+    // Endpoint para registrar un nuevo viaje.
+    // Usa el request y response específicos que creamos.
+    @POST("/viaje/registrar")
+    Call<ViajeResponse> registrarViaje(@Body ViajeRequest request);
 }

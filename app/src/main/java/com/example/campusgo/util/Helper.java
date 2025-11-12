@@ -38,7 +38,7 @@ import java.util.Locale;
 public class Helper {
 
 
-    public static String StringToBase64(final String originalInput){
+    public static String StringToBase64(final String originalInput) {
         final byte[] data;
         try {
             data = originalInput.getBytes("UTF-8");
@@ -51,7 +51,7 @@ public class Helper {
         return null;
     }
 
-    public static String formatearNumero(final double numero){
+    public static String formatearNumero(final double numero) {
         final DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.');
         simbolos.setGroupingSeparator(',');
@@ -62,7 +62,7 @@ public class Helper {
 
     }
 
-    public static String formatearNumero4(final double numero){
+    public static String formatearNumero4(final double numero) {
         final DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.');
         simbolos.setGroupingSeparator(',');
@@ -72,7 +72,6 @@ public class Helper {
         return formato.format(numero);
 
     }
-
 
 
     public static String convertPassMd5(String pass) {
@@ -119,8 +118,7 @@ public class Helper {
         // loop till a runtime exception is triggered.
         try {
             Looper.loop();
-        }
-        catch(final RuntimeException e2) {
+        } catch (final RuntimeException e2) {
 
         }
 
@@ -153,8 +151,7 @@ public class Helper {
         // loop till a runtime exception is triggered.
         try {
             Looper.loop();
-        }
-        catch(final RuntimeException e2) {
+        } catch (final RuntimeException e2) {
 
         }
 
@@ -162,10 +159,10 @@ public class Helper {
     }
 
 
-    public static void selectedItemSpinner(final Spinner spinner, final String itemSelection){
+    public static void selectedItemSpinner(final Spinner spinner, final String itemSelection) {
         int position = 0;
-        for (int i=0; i<spinner.getCount(); i++){
-            if (spinner.getItemAtPosition(i).equals(itemSelection)){
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).equals(itemSelection)) {
                 position = i;
                 break;
             }
@@ -177,8 +174,8 @@ public class Helper {
         final ArrayList<String> list = new ArrayList<String>();
         final Iterator<String> itr = params.keys();
 
-        while(itr.hasNext()){
-            final String key= itr.next();
+        while (itr.hasNext()) {
+            final String key = itr.next();
             final Object value = params.get(key);
             list.add(value.toString());
             //System.out.println("a"+key);
@@ -187,7 +184,7 @@ public class Helper {
     }
 
 
-    public static void ocultarTeclado(final Activity activity){
+    public static void ocultarTeclado(final Activity activity) {
         //activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
@@ -208,14 +205,14 @@ public class Helper {
 
     }
 
-    public static void mostarTeclado(final Activity activity){
+    public static void mostarTeclado(final Activity activity) {
         final InputMethodManager imm = (InputMethodManager)
                 (activity).getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
 
-    public static void habilitarDirectivaVerificaConeccionInternet(){
+    public static void habilitarDirectivaVerificaConeccionInternet() {
 
         //Habilitar la directiva para verificar si el telefono tiene conexión a internet
 
@@ -229,7 +226,7 @@ public class Helper {
     }
 
     //Gestionar diálogos
-    public static void mensajeConfirmacion(final Context context, final String title, final String message, final String bt_ok, final String bt_cancel, final Runnable if_ok){
+    public static void mensajeConfirmacion(final Context context, final String title, final String message, final String bt_ok, final String bt_cancel, final Runnable if_ok) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message)
                 .setTitle(title)
@@ -240,35 +237,35 @@ public class Helper {
                         if_ok.run();
                     }
                 }).setNegativeButton(bt_cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialogInterface, final int i) {
-                dialogInterface.cancel(); //close dialog
-            }
-        });
+                    @Override
+                    public void onClick(final DialogInterface dialogInterface, final int i) {
+                        dialogInterface.cancel(); //close dialog
+                    }
+                });
 
         //show dialog
         final AlertDialog dialog = builder.create();
         dialog.show();
     }
 
-    public static String obtenerFechaActual(){
+    public static String obtenerFechaActual() {
         final Date fecha = new Date();
         final SimpleDateFormat formatofecha = new SimpleDateFormat("dd/MM/yyyy");
         return formatofecha.format(fecha);
     }
 
-    public static String formatearDMA_to_AMD(final String fecha){
-        final String a = fecha.substring(fecha.length()-4);
-        final String m = fecha.substring(3,5);
+    public static String formatearDMA_to_AMD(final String fecha) {
+        final String a = fecha.substring(fecha.length() - 4);
+        final String m = fecha.substring(3, 5);
         final String d = fecha.substring(0, 2);
-        return  a+"/"+m+"/"+d;
+        return a + "-" + m + "-" + d;
     }
 
-    public static String formatearAMD_to_DMA(final String fecha){
-        final String d = fecha.substring(fecha.length()-2);
-        final String m = fecha.substring(5,7);
-        final String a = fecha.substring(0,4);
-        return  a+"/"+m+"/"+d;
+    public static String formatearAMD_to_DMA(final String fecha) {
+        final String d = fecha.substring(fecha.length() - 2);
+        final String m = fecha.substring(5, 7);
+        final String a = fecha.substring(0, 4);
+        return a + "/" + m + "/" + d;
     }
 
     public static String obtenerDireccionMapa(final Context context, final double latitud, final double longitud) {
@@ -290,7 +287,7 @@ public class Helper {
         } catch (final Exception e) {
             e.printStackTrace();
         }
-        return strAdd.substring(0,strAdd.length()-1);
+        return strAdd.substring(0, strAdd.length() - 1);
     }
 
 }

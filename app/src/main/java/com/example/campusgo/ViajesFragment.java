@@ -1,9 +1,13 @@
 package com.example.campusgo;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull; // Asegúrate de tener esta
 import androidx.annotation.Nullable; // Asegúrate de tener esta
 import androidx.fragment.app.Fragment;
@@ -24,8 +28,10 @@ import android.widget.Toast;
 
 import com.example.campusgo.adapter.ViajeListadoRecyclerViewAdapter;
 import com.example.campusgo.adapter.ViajeListadoRecyclerViewAdapterAgregado;
+import com.example.campusgo.databinding.FragmentAgregarViajesBinding;
 import com.example.campusgo.databinding.FragmentViajesBinding;
 import com.example.campusgo.model.LoginData;
+import com.example.campusgo.model.VehiculoData;
 import com.example.campusgo.model.ViajeListadoData;
 import com.example.campusgo.request.DetalleViajeRequest;
 import com.example.campusgo.request.ReservaRequest;
@@ -61,6 +67,7 @@ public class ViajesFragment extends Fragment implements ViajeListadoRecyclerView
     List<ViajeListadoData> list = new ArrayList<>();
     BottomSheetBehavior<View> bottomSheetBehavior;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,7 +87,7 @@ public class ViajesFragment extends Fragment implements ViajeListadoRecyclerView
         binding.recyclerViewViajesAgregado.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewViajesAgregado.setAdapter(adapterAgregado);
 
-        // --- ¡CORRECCIÓN FINAL! ---
+
         binding.fabAgregarViaje.setOnClickListener(v -> {
             // Usamos la nueva acción que parte desde PrincipalUsuarioFragment
             NavHostFragment.findNavController(this).navigate(R.id.action_principal_to_agregarViaje);
@@ -127,6 +134,21 @@ public class ViajesFragment extends Fragment implements ViajeListadoRecyclerView
             confirmarReserva();
         });
 
+        int rolUsuario = LoginStorage.getUserRol((getContext()));
+        int ID_ROL_CONDUCTOR = 2;
+        if (rolUsuario == ID_ROL_CONDUCTOR) {
+            binding.fabAgregarViaje.setVisibility(View.VISIBLE);
+
+            //Listener para crear viaje
+            binding.fabAgregarViaje.setOnClickListener(v -> {
+                NavHostFragment.findNavController(this).navigate(R.id.action_principal_to_agregarViaje);
+            });
+
+        } else {
+            binding.fabAgregarViaje.setVisibility(View.GONE);
+        }
+
+
         mostarViajes();
         mostrarViajesAgregados();
 
@@ -139,57 +161,94 @@ public class ViajesFragment extends Fragment implements ViajeListadoRecyclerView
     }
 
     private void confirmarReserva() {
+        // 1. Validar que haya viajes seleccionados
         if (ViajeListadoData.viajes.isEmpty()) {
             Toast.makeText(requireContext(), "No ha seleccionado viajes", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Helper.mensajeConfirmacion(requireContext(), "Confirme", "¿Seguro de registrar la reserva?", "SI RESERVAR", "NO", () -> {
-            ReservaRequest reservaRequest = new ReservaRequest();
-            reservaRequest.setPasajeroId(LoginStorage.getUserId(getContext()));
-            reservaRequest.setFechaReserva(Helper.formatearDMA_to_AMD(Helper.obtenerFechaActual()));
+        Helper.mensajeConfirmacion(requireContext(), "Confirme", "¿Seguro de registrar la reserva?", "SÍ, RESERVAR", "NO", () -> {
 
-            if (!binding.txtObservacion.getText().toString().isEmpty()) {
-                reservaRequest.setObservacion(binding.txtObservacion.getText().toString());
+            // --- PREPARACIÓN DE DATOS ---
+
+            // A. Obtener ID de usuario de forma segura (evita el error "Faltan datos obligatorios")
+            int pasajeroId = LoginStorage.getUserId(getContext());
+
+            // B. Obtener fecha (Asegúrate de que Helper.java use guiones: yyyy-MM-dd)
+            String fechaReserva = Helper.formatearDMA_to_AMD(Helper.obtenerFechaActual());
+
+            // C. Obtener observación (EVITA EL ERROR "Column 'observacion' cannot be null")
+            String observacion;
+            if (binding.txtObservacion.getText() != null && !binding.txtObservacion.getText().toString().isEmpty()) {
+                observacion = binding.txtObservacion.getText().toString();
             } else {
-                reservaRequest.setObservacion("Sin observaciones");
+                observacion = "Sin observaciones"; // Valor por defecto en lugar de null
             }
 
+            // D. Construir la lista de detalles
             List<DetalleViajeRequest> detalleViajeRequestList = new ArrayList<>();
             for (ViajeListadoData v : ViajeListadoData.viajes) {
-                DetalleViajeRequest detalleViajeRequest = new DetalleViajeRequest(v.getViajeId(), 14);
-                detalleViajeRequestList.add(detalleViajeRequest);
+                // Usamos el getter camelCase
+                detalleViajeRequestList.add(new DetalleViajeRequest(v.getViajeId(), 14));
             }
+
+            // --- LOGS DE DEPURACIÓN (Ver en Logcat) ---
+            Log.d("DEBUG_RESERVA", "--- Enviando al API ---");
+            Log.d("DEBUG_RESERVA", "pasajero_id: " + pasajeroId);
+            Log.d("DEBUG_RESERVA", "fecha_reserva: " + fechaReserva);
+            Log.d("DEBUG_RESERVA", "observacion: " + observacion);
+            Log.d("DEBUG_RESERVA", "detalles: " + detalleViajeRequestList.size() + " viajes");
+
+            // E. Crear el objeto Request
+            ReservaRequest reservaRequest = new ReservaRequest();
+            reservaRequest.setPasajeroId(pasajeroId);
+            reservaRequest.setFechaReserva(fechaReserva);
+            reservaRequest.setObservacion(observacion);
             reservaRequest.setDetalleViaje(detalleViajeRequestList);
 
+            // --- LLAMADA A LA API ---
             ApiService apiService = RetrofitClient.createService();
             Call<ReservaResponse> call = apiService.registrarReserva(reservaRequest);
 
             call.enqueue(new Callback<ReservaResponse>() {
                 @Override
-                public void onResponse(Call<ReservaResponse> call, Response<ReservaResponse> response) {
+                public void onResponse(@NonNull Call<ReservaResponse> call, @NonNull Response<ReservaResponse> response) {
                     if (response.isSuccessful()) {
-                        ViajeListadoData.viajes.clear();
-                        mostrarViajesAgregados();
-                        mostarViajes();
+                        Log.d("DEBUG_RESERVA", "¡Éxito! Reserva registrada.");
 
+                        // 1. Limpiar lista local
+                        ViajeListadoData.viajes.clear();
+
+                        // 2. Actualizar UI (Sincronización)
+                        mostrarViajesAgregados(); // Limpia el BottomSheet
+                        mostarViajes(); // Recarga la lista principal para actualizar los botones
+
+                        // 3. Limpiar input y mostrar mensaje
                         binding.txtObservacion.setText("");
                         Toast.makeText(requireContext(), "Reserva registrada satisfactoriamente", Toast.LENGTH_SHORT).show();
+
+                        // 4. Animación (opcional)
+                        // mostrarAnimacion();
                     } else {
+                        // Manejo de errores del servidor (400, 500)
                         try {
                             String errorBody = response.errorBody().string();
+                            Log.e("DEBUG_RESERVA", "Error API: " + errorBody);
+
                             JSONObject jsonError = new JSONObject(errorBody);
-                            String error = jsonError.getString("message");
-                            Helper.mensajeError(getContext(), "Error al registrar la reserva", error);
-                        } catch (IOException | JSONException e) {
-                            throw new RuntimeException(e);
+                            String error = jsonError.optString("message", "Error desconocido");
+                            Helper.mensajeError(getContext(), "Error al registrar", error);
+                        } catch (Exception e) {
+                            Log.e("DEBUG_RESERVA", "Error al leer la respuesta de error", e);
+                            Helper.mensajeError(getContext(), "Error", "No se pudo procesar la respuesta del servidor.");
                         }
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ReservaResponse> call, Throwable t) {
-                    Helper.mensajeError(getContext(), "Error al acceder al servicio de registro de reservas", t.getMessage());
+                public void onFailure(@NonNull Call<ReservaResponse> call, @NonNull Throwable t) {
+                    Log.e("DEBUG_RESERVA", "Fallo de conexión", t);
+                    Helper.mensajeError(getContext(), "Error de conexión", t.getMessage());
                 }
             });
         });
@@ -241,7 +300,13 @@ public class ViajesFragment extends Fragment implements ViajeListadoRecyclerView
         boolean sinRestricciones = (binding.chipSinRestricciones.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) <= 0;
 
         ApiService apiService = RetrofitClient.createService();
+        // En ViajesFragment.java, dentro de mostarViajes()
+
+        Log.e("FILTRO_DEBUG", "Enviando DESDE: '" + desde + "'");
+        Log.e("FILTRO_DEBUG", "Enviando HASTA: '" + hasta + "'");
+
         Call<ViajeListadoResponse> call = apiService.listarViajes(new ViajeListadoRequest("destino", textoBusqueda, asientosDisponibles, sinRestricciones, desde, hasta));
+
         call.enqueue(new Callback<ViajeListadoResponse>() {
             @Override
             public void onResponse(Call<ViajeListadoResponse> call, Response<ViajeListadoResponse> response) {
