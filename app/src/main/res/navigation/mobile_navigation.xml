@@ -5,51 +5,30 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/nav_principal_usuario">
 
-    <!-- Tu Fragment de Viajes, ahora registrado -->
-    <fragment
-        android:id="@+id/nav_viajes"
-        android:name="com.example.campusgo.ViajesFragment"
-        android:label="Viajes"
-        tools:layout="@layout/fragment_viajes" >
-        <!-- Esta es la acción (la "ruta") para ir a AgregarViajesFragment -->
-        <action
-            android:id="@+id/action_viajesFragment_to_agregarViajeFragment"
-            app:destination="@id/nav_agregar_viaje" />
-    </fragment>
-
-    <!-- Tu nuevo Fragment para agregar viajes -->
-    <fragment
-        android:id="@+id/nav_agregar_viaje"
-        android:name="com.example.campusgo.AgregarViajesFragment"
-        android:label="Agregar Viaje"
-        tools:layout="@layout/fragment_agregar_viajes" />
-
-    <!-- Tus otros fragments -->
-    <fragment
-        android:id="@+id/nav_home"
-        android:name="com.example.campusgo.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.campusgo.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.campusgo.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
     <fragment
         android:id="@+id/nav_principal_usuario"
         android:name="com.example.campusgo.PrincipalUsuarioFragment"
         android:label="fragment_nav_principal_usuario"
-        tools:layout="@layout/fragment_nav_principal_usuario" />
+        tools:layout="@layout/fragment_nav_principal_usuario" >
+        <action
+            android:id="@+id/action_principal_to_agregarViaje"
+            app:destination="@id/agregarViajesFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_perfil_usuario"
         android:name="com.example.campusgo.PerfilUsuarioFragment"
         android:label="fragment_nav_perfil_usuario"
         tools:layout="@layout/fragment_nav_perfil_usuario" />
+    <fragment
+        android:id="@+id/viajesFragment"
+        android:name="com.example.campusgo.ViajesFragment"
+        android:label="fragment_viajes"
+        tools:layout="@layout/fragment_viajes" />
+    <fragment
+        android:id="@+id/agregarViajesFragment"
+        android:name="com.example.campusgo.AgregarViajesFragment"
+        android:label="Registar un nuevo viaje"
+        tools:layout="@layout/fragment_agregar_viajes" />
+
+
 </navigation>
