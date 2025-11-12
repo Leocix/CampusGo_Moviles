@@ -200,6 +200,7 @@ public class AgregarViajesFragment extends Fragment {
     private void abrirMapa() {
         Intent intent = new Intent(getActivity(), MapaSeleccionadoActivity.class);
         mapaLauncher.launch(intent);
+
     }
 
     private void mostrarDatePicker() {
