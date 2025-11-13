@@ -1,30 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    tools:context=".MapaSeleccionadoActivity">
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/ic_location"
-        android:layout_marginBottom="20dp"
-        app:tint="@color/red"
-        xmlns:app="http://schemas.android.com/apk/res-auto"/>
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnConfirmarUbicacion"
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="20dp"
+            android:contentDescription="Marcador central"
+            android:src="@drawable/ic_location"
+            app:tint="@color/red" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConfirmarUbicacion"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="20dp"
+            android:text="CONFIRMAR ESTA UBICACIÓN"
+            app:cornerRadius="30dp" />
+
+    </RelativeLayout>
+
+    <!-- Barra de Búsqueda -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="20dp"
-        android:text="CONFIRMAR ESTA UBICACIÓN"
-        app:cornerRadius="30dp"/>
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent">
 
-</RelativeLayout>
+        <com.google.android.material.search.SearchBar
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:hint="Buscar dirección..." />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Vista de Búsqueda para mostrar resultados -->
+    <com.google.android.material.search.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="Buscar dirección..."
+        app:layout_anchor="@id/search_bar">
+        <!-- RecyclerView para mostrar las sugerencias de lugares -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_sugerencias"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="8dp" />
+
+    </com.google.android.material.search.SearchView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

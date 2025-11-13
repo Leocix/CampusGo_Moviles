@@ -61,7 +61,7 @@
             android:label="Seleccionar Ubicación"></activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCSUWGgNZsQXC59AXXZ6MKWl8x9D95n2G4" />
+            android:value="AIzaSyBd13FEii6Xp59Eu3l2nh6pPOkx1RzES9I" />
 
 
     </application>
